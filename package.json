@@ -1,0 +1,17 @@
+{
+  "name": "koa-demos",
+  "version": "1.0.0",
+  "description": "a demo of koa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fackin",
+  "license": "ISC",
+  "dependencies": {
+    "fs.promised": "^3.0.0",
+    "koa": "^2.7.0",
+    "koa-route": "^3.2.0",
+    "koa-static": "^5.0.0"
+  }
+}
