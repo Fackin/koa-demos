@@ -6,6 +6,16 @@
 
 搬运自阮一峰老师博客 [http://www.ruanyifeng.com/blog/2017/08/koa.html](http://www.ruanyifeng.com/blog/2017/08/koa.html)
 
+目录
+
+[准备](#0准备)
+
+[Web App功能](#5Web-App功能)
+ - [Cookies](#51-Cookies)
+ - [表单](#52-表单)
+ - [文件上传](#53-文件上传)
+ - [response type](#demo03-response-type)
+
 ## 0、准备
 
 使用node版本7.6以上
@@ -634,7 +644,7 @@ app.listen(3000);
 ```shell
 curl --form upload=@/path/to/file http://127.0.0.1:3000
 ```
-
+## Demo03: response type
 
 
 （完）
