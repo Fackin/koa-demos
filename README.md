@@ -4,7 +4,7 @@
 
 2019年5月6日
 
-搬运自阮一峰老师 [http://www.ruanyifeng.com/blog/2017/08/koa.html](http://www.ruanyifeng.com/blog/2017/08/koa.html)
+搬运自阮一峰老师博客 [http://www.ruanyifeng.com/blog/2017/08/koa.html](http://www.ruanyifeng.com/blog/2017/08/koa.html)
 
 ## 0、准备
 
@@ -156,7 +156,7 @@ app.listen(3000);
 
 
 
-### 2.2koa-route模块
+### 2.2 koa-route模块
 
 Koa 提供封装好的koa-route模块
 
@@ -187,7 +187,7 @@ npm install koa-route --save
 node demos/06.js
 ```
 
-###2.3静态资源
+###2.3 静态资源
 
 网站提供的静态资源（图片，字体，样式。。。）的路由，koa-static模块封装了
 
@@ -558,5 +558,83 @@ app.listen(3000);
 
 ###5.2 表单
 
+Web应用离不开处理表单，本质上，表单就是POST方法发送到服务器的键值对。`koa-body`模块可以用来从POST请求的数据体里提取键值对。
+
+```javascript
+// 表单处理
+const Koa = require('koa');
+const app = new Koa();
+const koaBody = require('koa-body');
+
+const main = async function(ctx, next) {
+  const body = ctx.request.body;
+  if(!body.name)ctx.throw(400, '.name required');
+  ctx.response.body = { name: body.name };
+}
+
+app.use(koaBody());
+app.use(main);
+app.listen(3000);
+```
 
 
+
+```shell
+npm install koa-body --save
+```
+
+打开另一个命令行窗口，运行以下命令。使用POST方法向服务器发送一个键值对，如果数据不正确，会收到错误提示。
+
+```shell
+$ curl -X POST --data "name=Jack" 127.0.0.1:3000
+{"name":"Jack"}
+
+$ curl -X POST --data "name" 127.0.0.1:3000
+name required
+```
+
+### 2.3 文件上传
+
+`Koa-body`还可以处理文件上传。
+
+```javascript
+// 文件上传
+const Koa = require('koa');
+const app = new Koa();
+const os  = require('os');
+const path = require('path');
+const koaBody = require('koa-body');
+const fs = require('fs');
+
+const main = async function(ctx, next) {
+  const tmpdir = os.tmpdir();
+  const filePaths = [];
+  const files = ctx.request.files || {};
+
+  for (let key in files) {
+    const file = files[key];
+    const filePath = path.join(tmpdir, file.name);
+    const reader = fs.createReadStream(file.path);
+    const writer = fs.createWriteStream(filePath);
+    reader.pipe(writer);
+    console.log('file',key, filePath);
+    filePaths.push(filePath);
+  }
+
+  ctx.body = filePaths;
+}
+
+app.use(koaBody({ multipart: true }));
+app.use(main);
+app.listen(3000);
+```
+
+打开另一个命令行窗口，执行以下命令，上传一个文件。`/path/to/file`填写真实路径。
+
+```shell
+curl --form upload=@/path/to/file http://127.0.0.1:3000
+```
+
+
+
+（完）
